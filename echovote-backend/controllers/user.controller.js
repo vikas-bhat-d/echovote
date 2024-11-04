@@ -1,6 +1,6 @@
-import asyncHandler from "../utils/asyncHandler.js";
-import apiError from "../utils/apiError.js"
-import apiResponse from "../utils/apiResponse.js"
+import asyncHandler from "../utils/asyncHandler.utils.js";
+import apiError from "../utils/apiError.utils.js"
+import apiResponse from "../utils/apiResponse.utils.js"
 import {User} from '../models/user.model.js'
 
 const cookieOptions={
@@ -97,3 +97,9 @@ const logoutUser=asyncHandler(async(req,res,next)=>{
     .json(new apiResponse(200,{}, "User logged out succesfully"))
 
 })
+
+export{
+    registerUser,
+    loginUser,
+    logoutUser
+}
