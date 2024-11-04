@@ -1,4 +1,4 @@
-import express from "express"
+import express,{Router} from "express"
 import cors from "cors"
 import dotenv from "dotenv"
 import cookieParser from "cookie-parser";
@@ -21,5 +21,9 @@ app.use(cookieParser());
 app.get("/",(req,res)=>{
     res.send(`server listening on port ${PORT || 3000}`)
 })
+
+import userRouter from "../routes/user.route.js"
+
+app.use("/api/v1/user",userRouter);
 
 export default app
