@@ -7,6 +7,7 @@ const playlistSchema=new Schema({
         ref:"User",
         required:true,
     },
+    venueName:String,
 
     songList:{
         type:[{

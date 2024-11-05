@@ -44,7 +44,7 @@ const registerUser=asyncHandler(async(req,res,next)=>{
     await User.create({username,email,password,venueName,venueType})
     let createdUser=await User.findOne({username:username}).select('-password')
 
-    await Playlist.create({OwnerID:createdUser._id,songList:{}})
+    await Playlist.create({ownerID:createdUser._id,venueName:createdUser.venueName})
     return res
     .status(201)
     .send(new apiResponse(201,createdUser,"User Registration Succesfull"))

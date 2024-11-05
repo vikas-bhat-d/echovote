@@ -1,9 +1,9 @@
-import app from "./src/app.js"
+import server from "./src/app.js"
 import connectDB from "./db/connectDB.db.js"
 
 connectDB()
 .then(()=>{
-    app.listen(process.env.PORT||8000,()=>{
+    server.listen(process.env.PORT||8000,()=>{
         console.log("listening at port ",process.env.PORT || 3000)
     })
 })
