@@ -1,4 +1,3 @@
-import { Socket } from "socket.io";
 import { Playlist } from "../models/playlist.model.js";
 
 const COOLDOWN_MINUTES=15;
@@ -125,7 +124,7 @@ const PlayNext=async (io,{venueName})=>{
 
 const handleSongEnd=async (io,socket)=>{
     const venueName=socket.handshake.query.venueName;
-    PlayNext(io,venueName);
+    PlayNext(io,{venueName});
 }
 export {
     handleDownvote,
