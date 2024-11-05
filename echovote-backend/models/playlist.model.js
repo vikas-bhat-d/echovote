@@ -2,8 +2,9 @@ import { Schema } from "mongoose";
 import mongoose from "mongoose";
 
 const playlistSchema=new Schema({
-    shopID:{
-        type:Number,
+    ownerID:{
+        type:Schema.Types.ObjectId,
+        ref:"User",
         required:true,
     },
 

@@ -23,7 +23,9 @@ app.get("/",(req,res)=>{
 })
 
 import userRouter from "../routes/user.route.js"
+import playlistRouter from "../routes/playlist.route.js"
 
 app.use("/api/v1/user",userRouter);
+app.use("/api/v1/playlist",playlistRouter);
 
 export default app
