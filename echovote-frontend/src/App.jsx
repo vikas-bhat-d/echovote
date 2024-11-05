@@ -1,8 +1,11 @@
 import React from 'react'
+import LandingPage from './Components/LandingPage'
 
 function App() {
   return (
-    <div>App</div>
+    <div>
+      <LandingPage/>
+    </div>
   )
 }
 
