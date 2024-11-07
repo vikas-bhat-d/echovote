@@ -6,7 +6,7 @@ import './Style.css';
 function Register() {
   return (
     <>  
-      <div className='w-full h-screen relative flex justify-center items-center'>
+      <div className='w-full h-screen relative flex justify-center items-center RegisterPage'>
 
         <img className='absolute w-full h-screen' src={assets.LoginBackground} alt="Background" /> 
         {/* Register Form */}
