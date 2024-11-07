@@ -16,7 +16,7 @@ function LandingPage() {
 
         <div className='flex gap-3'> 
         <Link to="/"> <li className="list-none mt-8 px-4 sm:px-6 py-3 bg-[#027ED1ff] text-white font-semibold rounded-full hover:bg-blue-700 transition duration-200 text-sm sm:text-base">Get Started</li></Link>
-        <Link to="/login"><li className="list-none mt-8 px-4 sm:px-6 py-3 bg-[#027ED1ff] text-white font-semibold rounded-full hover:bg-blue-700 transition duration-200 text-sm sm:text-base">
+        <Link to="/loginPage"><li className="list-none mt-8 px-4 sm:px-6 py-3 bg-[#027ED1ff] text-white font-semibold rounded-full hover:bg-blue-700 transition duration-200 text-sm sm:text-base">
         Log In / Sign Up</li></Link>
           
         </div>
