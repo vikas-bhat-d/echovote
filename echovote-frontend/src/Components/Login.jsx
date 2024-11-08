@@ -26,6 +26,7 @@ function Login() {
                                       })
       console.log(response.data);
       if(response.data.success==true)
+        localStorage(response.data.data.accessToken);
         navigate(`/playlist/${response.data.data.User[0].venueName}`)
     } catch (error) {
       console.log(error)
