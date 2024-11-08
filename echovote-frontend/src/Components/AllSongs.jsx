@@ -11,19 +11,19 @@ function AllSongs({ songs }) {
 }
 
 function SongVote({ song }) {
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState(0);``
 
   const handleUpvote = () => setCount(count + 1);
   const handleDownvote = () => setCount(count - 1);
 
   return (
-    <div className="min-w-[300px] w-[800px] h-28 rounded-2xl bg-gray-600 border flex items-center justify-center px-10 gap-6 ">
+    <div className="min-w-[300px] w-[800px] h-28 rounded-2xl bg-transperent border flex items-center justify-center px-10 gap-6 " style={{backdropFilter:'blur(100px)'}}>
       {/* Thumbnail */}
       <div className="w-20 h-20 rounded-xl bg-gray-700 border"></div>
 
       {/* Song Details */}  
       <div className="flex-1 mx-6">
-        <h1 className="text-lg font-semibold">{song.name}</h1>
+        <h1 className="text-lg font-semibold ">{song.name}</h1>
         <a href={song.url} className="underline">{song.url}</a>
       </div>
 
