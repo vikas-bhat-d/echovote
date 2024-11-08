@@ -19,11 +19,17 @@ function PlaylistPage() {
 
         const fetchData = async () => {
             try {
+                console.log("Fetched playlist again")
                 const response = await axios.get(`${server}/api/v1/playlist/${venueName}`);
                 if (response.data) {
                     const fetchedSongs = response.data.data.songList;
                     setSongs(fetchedSongs);
-                    setCurrentSong(response.data.data.currentlyPlaying || fetchedSongs[0] || null);
+                    console.log(fetchedSongs);
+                    const sortedSongs = fetchedSongs
+                    .filter(song => !song.lastPlayedAt || new Date() - song.lastPlayedAt > COOLDOWN_MINUTES * 60 * 1000)
+                    .sort((a, b) => b.voteCount - a.voteCount || (a.lastPlayedAt || 0) - (b.lastPlayedAt || 0));
+                    setCurrentSong((prev)=>response.data.data.currentlyPlaying || sortedSongs[0].videoId || null);
+                    console.log("current song:",currentSong);
                 }
             } catch (error) {
                 console.error("Error fetching playlist:", error);
@@ -84,6 +90,10 @@ function PlaylistPage() {
             </div>
         </div>
     );
+}
+
+function truncateText(text, maxLength) {
+  return text.length > maxLength ? text.slice(0, maxLength - 3) + '...' : text;
 }
 
 export default PlaylistPage;

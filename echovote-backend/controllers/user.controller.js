@@ -3,11 +3,19 @@ import apiError from "../utils/apiError.utils.js"
 import apiResponse from "../utils/apiResponse.utils.js"
 import {User} from '../models/user.model.js'
 import { Playlist } from "../models/playlist.model.js";
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv"
+
+dotenv.config({
+    path:'./.env'
+})
 
 const cookieOptions={
     httpOnly:true,
     secure:true
 }
+
+
 
 const generateTokens=async function (userId) {
     try {
@@ -44,7 +52,7 @@ const registerUser=asyncHandler(async(req,res,next)=>{
     await User.create({username,email,password,venueName,venueType})
     let createdUser=await User.findOne({username:username}).select('-password')
 
-    await Playlist.create({ownerID:createdUser._id,venueName:createdUser.venueName})
+    await Playlist.create({ownerID:createdUser._id,venueName:createdUser.venueName,voteCount:0})
     return res
     .status(201)
     .send(new apiResponse(201,createdUser,"User Registration Succesfull"))
@@ -102,8 +110,45 @@ const logoutUser=asyncHandler(async(req,res,next)=>{
 
 })
 
+const checkLog=asyncHandler(async function(req,res,next) {
+    try {
+        const accessToken=req.cookies?.accessToken || req.header("Authorization")?.replace("Bearer ","")
+        console.log(accessToken);
+        console.log(req.cookies);
+    
+        if(!accessToken)
+            res.status(400).send(new apiResponse(400,{},"Not Logged in"))
+    
+        let decodedToken=jwt.verify(accessToken,process.env.ACCESS_TOKEN_SECRET);
+        
+        if(!decodedToken)
+        {
+            res.status(400).send(new apiResponse(400,{},"Not Logged in"))
+            return
+        }
+
+        
+        
+        const user=await User.findById(decodedToken._id).select("-password -refreshToken");
+        if(!user){
+            res.status(400).send(new apiResponse(400,{},"Not Logged in"))
+            return
+        }
+
+    
+        req.user=user;
+
+
+    } catch (error) {
+        throw new apiError(400,error.message||"verifying token failed");
+        next(error)
+    }
+    // res.send(new apiResponse(200,req.user,"User is logged in"));
+})
+
 export{
     registerUser,
     loginUser,
-    logoutUser
+    logoutUser,
+    checkLog
 }

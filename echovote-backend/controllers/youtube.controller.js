@@ -39,10 +39,12 @@ const fetchYoutubeVideos = async (query) => {
 
 const searchMusic=asyncHandler(async(req,res,next)=>{
     const {query}=req.query
+    console.log("queries:",query);
 
     if(!query)
         throw new apiError(400,"no search query")
     const results=await fetchYoutubeVideos(query)
+    console.log(results)
     if(results)
         res.status(200)
         .send(new apiResponse(200,results,"searched the results"))

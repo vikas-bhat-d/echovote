@@ -17,15 +17,15 @@ const fetchPlaylist=asyncHandler(async (req,res,next)=>{
 })
 
 const addSong=asyncHandler(async (req,res,next) => {
-    const {videoId,title,thumbnailUrl}=req.body;
-    const ownerID=req.user._id
+    const {videoId,title,thumbnailUrl,venueName}=req.body;
+    // const ownerID=req.user._id
     
-    console.log(req.user._id,ownerID);
+    // console.log(req.user._id,ownerID);
 
     const newSong={videoId,title,thumbnailUrl};
 
     const addedSong=await Playlist.findOneAndUpdate(
-        {ownerID},
+        {venueName},
         {$push:{songList:newSong}},
         {new:true}
     )

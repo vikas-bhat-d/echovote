@@ -14,7 +14,12 @@ const PORT=process.env.PORT;
 
 const app=express();
 const server = http.createServer(app);
-const io = new Server(server);
+const io = new Server(server,{
+    cors: {
+        origin: "*",
+    }
+});
+
 
 //http
 app.use(cors({
@@ -38,11 +43,12 @@ app.use("/api/v1/playlist",playlistRouter);
 
 
 //socket
-import { handleDownvote,handleUpvote,broadcastPlaylist,handleSongEnd } from "../controllers/socket.controller.js"
+import { handleDownvote,handleUpvote,broadcastPlaylist,handleSongEnd,handleModified } from "../controllers/socket.controller.js"
 io.on('connection',(socket)=>{
     console.log("A user connected");
 
     socket.on('joinRoom',(venueName)=>{
+        console.log("user joinde ",venueName);
         socket.join(venueName);
     });
 
@@ -61,6 +67,10 @@ io.on('connection',(socket)=>{
     socket.on('disconnect', () => {
         console.log('User disconnected');
     });
+
+    socket.on(('playlistModified'),(data)=>{
+        handleModified(io,socket,data);
+    })
 })
 
 export default server

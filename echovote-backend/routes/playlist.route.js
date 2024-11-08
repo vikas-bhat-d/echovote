@@ -5,8 +5,8 @@ import { Router } from "express";
 
 const router=Router();
 
-router.route("/search").get(verifyJWT,searchMusic);
+router.route("/search").get(searchMusic);
 router.route("/:venueName").get(fetchPlaylist)
-router.route("/add").post(verifyJWT,addSong)
+router.route("/add").post(addSong)
 
 export default router
