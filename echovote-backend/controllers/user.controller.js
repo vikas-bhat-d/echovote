@@ -2,6 +2,7 @@ import asyncHandler from "../utils/asyncHandler.utils.js";
 import apiError from "../utils/apiError.utils.js"
 import apiResponse from "../utils/apiResponse.utils.js"
 import {User} from '../models/user.model.js'
+import { Playlist } from "../models/playlist.model.js";
 
 const cookieOptions={
     httpOnly:true,
@@ -36,11 +37,14 @@ const registerUser=asyncHandler(async(req,res,next)=>{
         $or:[{username:username}, {email:email},{venueName:venueName}]
     })
 
+
+
     if(existedUser) throw new apiError(409,"User or venue name already exits");
 
     await User.create({username,email,password,venueName,venueType})
     let createdUser=await User.findOne({username:username}).select('-password')
 
+    await Playlist.create({ownerID:createdUser._id,venueName:createdUser.venueName})
     return res
     .status(201)
     .send(new apiResponse(201,createdUser,"User Registration Succesfull"))
