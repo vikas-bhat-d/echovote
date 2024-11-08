@@ -47,7 +47,7 @@ function PlaylistPage() {
 
                 {/* Currently Playing */}
                 <div className='flex flex-col items-center p-10 w-full max-w-4xl'>
-                    <h1 className='text-2xl font-semibold mb-4'>Currently Playing Song</h1>
+                    <h1 className='text-2xl font-semibold mb-4'>Now Playing</h1>
                     <CurrentSong song={currentSong} /> 
                 </div>
 
