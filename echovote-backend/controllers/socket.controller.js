@@ -1,6 +1,29 @@
+
 import { Playlist } from "../models/playlist.model.js";
+import jwt from "jsonwebtoken"
+import dotenv from "dotenv"
+dotenv.config({
+    path:'./.env'
+})
 
 const COOLDOWN_MINUTES=15;
+
+const verifyToken=async(socket)=>{
+    const cookies = socket.request.headers.cookie;
+    console.log(cookies);
+    const token = cookies && cookies.includes('accessToken') ? cookies.split('accessToken=')[1].split(';')[0] : null;
+    console.log(token);
+
+    return new Promise((resolve, reject) => {
+        jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
+          if (err) {
+            reject('Authentication error: Invalid token');
+          } else {
+            resolve(decoded); // Return decoded user information (e.g., userId)
+          }
+        });
+    });
+}
 
 const canVoteOnSong=(lastPlayedAt)=>{
     if(!lastPlayedAt) return true;
@@ -123,8 +146,12 @@ const PlayNext=async (io,{venueName})=>{
 }
 
 const handleSongEnd=async (io,socket)=>{
-    const venueName=socket.handshake.query.venueName;
-    PlayNext(io,{venueName});
+    verifyToken(socket)
+    .then((decoded)=>{
+        const venueName=socket.handshake.query.venueName;
+        PlayNext(io,{venueName});
+    })
+    .catch(err=>socket.emit("error","unauthorized"))
 }
 export {
     handleDownvote,

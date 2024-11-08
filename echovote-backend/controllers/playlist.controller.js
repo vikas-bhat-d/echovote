@@ -6,12 +6,6 @@ import { User } from "../models/user.model.js";
 
 const fetchPlaylist=asyncHandler(async (req,res,next)=>{
     const {venueName}=req.params;
-
-    // if(venueName?.trim()=="")
-    //     throw new apiError(400,"Playlist ID is missing in the request")
-    // const existedUser=await User.findOne({venueName})
-    // if(!existedUser)
-    //     throw new apiError(400,"Playlist not found")
     const fetchedSong=await Playlist.findOne({venueName:venueName})
 
     if(!fetchedSong)
