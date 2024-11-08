@@ -18,7 +18,7 @@ const fetchPlaylist=asyncHandler(async (req,res,next)=>{
         throw new apiError(400,"songs could not be fetched")
     res
     .status(200)
-    .send(new apiResponse(200,fetchedSong.songList,"Songs fetched"))
+    .send(new apiResponse(200,fetchedSong,"Songs fetched"))
 
 })
 
