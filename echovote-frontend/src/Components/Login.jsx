@@ -1,9 +1,36 @@
-import React from 'react';
+import React,{useState} from 'react';
+import axios from "axios"
 import { assets } from '../assets/assets';
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
+import { server } from '../environments.js';
 import './Style.css';
 
 function Login() {
+  const navigate=useNavigate();
+  const [user,setUser]=useState('');
+  const [password,setPassword]=useState('');
+  
+  const handleSubmit=async()=>{
+    const data={
+      user:user,
+      password:password
+    }
+
+    try {
+      const response=await axios.post(`${server}/api/v1/user/login`,
+                                      {...data},
+                                      {
+                                        headers: {
+                                          'Content-Type': 'application/x-www-form-urlencoded',
+                                        },
+                                      })
+      console.log(response.data);
+      if(response.data.success==true)
+        navigate(`/playlist/${response.data.data.User[0].venueName}`)
+    } catch (error) {
+      console.log(error)
+    }
+  }
   return (
     <>  
       <div className='w-full h-screen relative flex justify-center items-center LoginPage'>
@@ -16,14 +43,14 @@ function Login() {
           {/* Email */}
           <div className='input-box mb-4'>
             <span className='icon'><ion-icon name="mail"></ion-icon></span>
-            <input type="email" id="email" required/>
+            <input type="text" value={user} onChange={(e)=>setUser(e.target.value)} id="email" required/>
             <label className='form-label' htmlFor="email">Email</label>
           </div>
           
           {/* Password */}
           <div className='input-box mb-4'>
             <span className='icon'><ion-icon name="lock-closed"></ion-icon></span>
-            <input type="password" id="password" required/>
+            <input type="password" value={password} onChange={(e)=>setPassword(e.target.value)} id="password" required/>
             <label className='form-label' htmlFor="password">Password</label>
           </div> 
 
@@ -34,7 +61,7 @@ function Login() {
           </div>
 
           {/* Submit */}
-          <button type='submit' className='mb-4 px-[20%] py-2 border bg-[#027ED1ff] text-white font-semibold rounded-full hover:bg-blue-700 transition duration-200 text-sm sm:text-base'>Login</button>
+          <button type='submit' className='mb-4 px-[20%] py-2 border bg-[#027ED1ff] text-white font-semibold rounded-full hover:bg-blue-700 transition duration-200 text-sm sm:text-base' onClick={handleSubmit}>Login</button>
           
           {/* Register Link */}
           <div>  

@@ -17,7 +17,9 @@ const server = http.createServer(app);
 const io = new Server(server);
 
 //http
-
+app.use(cors({
+    path:process.env.CORS_ORIGIN
+}))
 app.use(express.urlencoded({extended:true}))
 app.use(express.json())
 app.use(express.static("public"))
