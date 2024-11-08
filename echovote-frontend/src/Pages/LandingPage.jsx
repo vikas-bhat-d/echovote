@@ -1,5 +1,6 @@
 import React from 'react'
 import { assets } from '../assets/assets'
+import {Link} from 'react-router-dom';
 
 function LandingPage() {
   return (
@@ -14,11 +15,10 @@ function LandingPage() {
         <p className='text-lg sm:text-md'>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nemo, cumque accusantium. Soluta quia nesciunt officia, nulla rerum repellendus </p>
 
         <div className='flex gap-3'> 
-        <button className="mt-8 px-4 sm:px-6 py-3 bg-[#027ED1ff] text-white font-semibold rounded-full hover:bg-blue-700 transition duration-200 text-sm sm:text-base">Get Started</button>
-
-        <button className="mt-8 px-4 sm:px-6 py-3 bg-[#027ED1ff] text-white font-semibold rounded-full hover:bg-blue-700 transition duration-200 text-sm sm:text-base">
-            Log In / Sign Up
-        </button> 
+        <Link to="/"> <li className="list-none mt-8 px-4 sm:px-6 py-3 bg-[#027ED1ff] text-white font-semibold rounded-full hover:bg-blue-700 transition duration-200 text-sm sm:text-base">Get Started</li></Link>
+        <Link to="/loginPage"><li className="list-none mt-8 px-4 sm:px-6 py-3 bg-[#027ED1ff] text-white font-semibold rounded-full hover:bg-blue-700 transition duration-200 text-sm sm:text-base">
+        Log In / Sign Up</li></Link>
+          
         </div>
 
       </div>
