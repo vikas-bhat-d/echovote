@@ -30,7 +30,6 @@ function AdminInterface() {
                     const fetchedSongs = response.data.data.songList;
                     setSongs(fetchedSongs);
                     const sortedSongs = fetchedSongs
-                        .filter(song => !song.lastPlayedAt || new Date() - song.lastPlayedAt > COOLDOWN_MINUTES * 60 * 1000)
                         .sort((a, b) => b.voteCount - a.voteCount || (a.lastPlayedAt || 0) - (b.lastPlayedAt || 0));
                     setCurrentSong(response.data.data.currentlyPlaying || sortedSongs[0]?.videoId || null);
                 }
@@ -49,7 +48,7 @@ function AdminInterface() {
     useEffect(() => {
         if (socket) {
             socket.emit("joinRoom", venueName);
-            socket.emit("songEnded",{venueName:venueName});
+            // socket.emit("songEnded",{venueName:venueName});
 
             socket.on("playlistUpdate", (updatedPlaylist) => {
                 setSongs(updatedPlaylist.songList);

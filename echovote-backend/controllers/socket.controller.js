@@ -130,6 +130,7 @@ const playNext = async (io, venueName) => {
             .sort((a, b) => b.voteCount - a.voteCount || (a.lastPlayedAt || 0) - (b.lastPlayedAt || 0));
 
         const nextSong = sortedSongs[0];
+        console.log(sortedSongs);
 
         if (!nextSong) {
             io.to(venueName).emit('error', 'No song available for play.');

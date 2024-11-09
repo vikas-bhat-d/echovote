@@ -71,7 +71,13 @@ function CurrentSong({song,socket,venueName}) {
 
     // Attach API script and initialize the player
     loadYouTubeAPI();
-    window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
+    // window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
+    // if (window.YT) {
+    //   onYouTubeIframeAPIReady();
+    //   player.loadVideoById(song.trim());
+    // } else {
+      window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
+    // }
 
     if(player){
       player.loadVideoById(song.trim());
