@@ -49,10 +49,11 @@ function AdminInterface() {
     useEffect(() => {
         if (socket) {
             socket.emit("joinRoom", venueName);
+            socket.emit("songEnded",{venueName:venueName});
 
             socket.on("playlistUpdate", (updatedPlaylist) => {
                 setSongs(updatedPlaylist.songList);
-                setCurrentSong(updatedPlaylist.currentlyPlaying || updatedPlaylist.songList[0]);
+                // setCurrentSong(updatedPlaylist.currentlyPlaying || updatedPlaylist.songList[0]);
             });
 
             socket.on("songUpdate", (updatedSong) => {
@@ -64,13 +65,19 @@ function AdminInterface() {
                     )
                 );
             });
+            
+            socket.on("currentlyPlaying",(nextSong)=>{
+                console.log(nextSong);
+                console.log("setting current song");
+                setCurrentSong(nextSong.videoId)
+            })
 
             return () => {
                 socket.off("playlistUpdate");
                 socket.off("songUpdate");
             };
         }
-    }, [socket, venueName]);
+    }, [socket, venueName,currentSong,setCurrentSong]);
 
     // Debounced search
     useEffect(() => {
@@ -115,7 +122,7 @@ function AdminInterface() {
 
                 <div className='flex flex-col items-center p-10 w-full max-w-4xl'>
                     <h1 className='text-2xl font-semibold mb-4'>Now Playing</h1>
-                    <CurrentSong song={currentSong} /> 
+                    <CurrentSong song={currentSong} socket={socket} venueName={venueName}/> 
                 </div>
 
                 <div className='text-center p-10 w-full max-w-4xl'>
@@ -143,7 +150,7 @@ function AdminInterface() {
                             </div>
                         )}
                     </div>
-                    <AddSongs songs={songs} />
+                    <AddSongs songs={songs} socket={socket} venueName={venueName}/>
                 </div>
             </div> 
         </div>

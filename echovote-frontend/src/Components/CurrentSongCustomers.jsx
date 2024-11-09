@@ -1,16 +1,11 @@
 import React,{useState,useEffect,useRef} from 'react';
 
-function CurrentSong({song,socket,venueName}) {
-  // console.log("socket:",socket)
-  
-  console.log("venueName outside:",venueName)
-  console.log("component loaded again with song: ",song);
+function CurrentSongCustomers({song,socket,venueName}) {
   // console.log(song)
   const [player, setPlayer] = useState(null);
   const iframeRef = useRef(null);
 
   useEffect(() => {
-    console.log("calling use effect with",song)
     // Load YouTube API script
     const loadYouTubeAPI = () => {
       if (window.YT) {
@@ -36,7 +31,7 @@ function CurrentSong({song,socket,venueName}) {
         width: '560',
         videoId: song?song.trim():"",
         playerVars: {
-          autoplay: 1,  // This ensures the video will autoplay when loaded
+          autoplay: 0,  // This ensures the video will autoplay when loaded
           controls: 1,  // You can also control whether the player controls are shown
           modestbranding: 1,
           rel: 0,
@@ -52,7 +47,6 @@ function CurrentSong({song,socket,venueName}) {
       setPlayer(newPlayer);
     };
 
-
     // Event handler when player is ready
     const onPlayerReady = (event) => {
       playVideo();
@@ -60,12 +54,10 @@ function CurrentSong({song,socket,venueName}) {
     };
 
     // Event handler for state change (detect when song changes)
-    const onPlayerStateChange = (event) => {
+    const onPlayerStateChange = (event,socket) => {
       if (event.data === window.YT.PlayerState.ENDED) {
-        console.log("venueName:",venueName);
         socket.emit("songEnded",{venueName:venueName});
         console.log("Song ended, change to next song");
-
       }
     };
 
@@ -73,19 +65,13 @@ function CurrentSong({song,socket,venueName}) {
     loadYouTubeAPI();
     window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
 
-    if(player){
-      player.loadVideoById(song.trim());
-    }
-
-
-
     return () => {
       // Cleanup if needed
       if (player) {
         player.destroy();
       }
     };
-  }, [song,socket,venueName]);
+  }, [song]);
 
   // Function to play the video
   
@@ -119,4 +105,4 @@ function CurrentSong({song,socket,venueName}) {
   );
 }
 
-export default CurrentSong;
+export default CurrentSongCustomers;

@@ -16,7 +16,7 @@ function SongVote({ song, socket, venueName }) {
   useEffect(()=>{
     setCount(song.voteCount);
   },[song.voteCount])
-  console.log("component called with songs",song.title,song.voteCount,count);
+  // console.log("component called with songs",song.title,song.voteCount,count);
 
   const handleUpvote = () => {
     socket.emit("upvote", { venueName, videoId: song.videoId });

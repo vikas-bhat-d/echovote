@@ -64,6 +64,7 @@ const handleUpvote = async (io, socket, { venueName, videoId }) => {
         const playlist = await Playlist.findOne({ venueName });
         const song = playlist.songList.find((song) => song.videoId === videoId);
 
+
         if (!song) return socket.emit('error', 'Song not found');
         if ((canVoteOnSong(song.lastPlayedAt).isCooldownNotExpired)) {
             return socket.emit("error", "Cannot vote on this song due to cooldown");
@@ -77,6 +78,7 @@ const handleUpvote = async (io, socket, { venueName, videoId }) => {
         const updatedSong = updatedPlaylist.songList.find((song) => song.videoId === videoId);
 
         broadcastPlaylist(io, venueName);
+        io.to(venueName).emit('voteChange',{inc:1})
     } catch (error) {
         socket.emit("error", 'Error in upvoting');
     }
@@ -99,14 +101,24 @@ const handleDownvote = async (io, socket, { venueName, videoId }) => {
         );
 
         broadcastPlaylist(io, venueName);
+        io.to(venueName).emit('voteChange',{inc:-1})
     } catch (error) {
         socket.emit("error", "Error in downvoting");
     }
 };
 
-const playNext = async (io, { venueName }) => {
+const playNext = async (io, venueName) => {
     try {
+        console.log("Playing next:",venueName)
         const playlist = await Playlist.findOne({ venueName });
+        // if(playlist.currentlyPlaying){
+        //     const lastPlayedVideo=playlist.songList.filter(song=>song.videoId==playlist.currentlyPlaying)
+        //     lastPlayedVideo.lastPlayedAt=new Date()
+        // }
+        // else
+        //     playlist.songList[0].lastPlayedAt=new Date()
+
+        console.log("playlist:",playlist);
 
         if (!playlist || playlist.songList.length === 0) {
             io.to(venueName).emit('error', "No songs in the playlist");
@@ -114,7 +126,7 @@ const playNext = async (io, { venueName }) => {
         }
 
         const sortedSongs = playlist.songList
-            .filter(song => !song.lastPlayedAt || new Date() - song.lastPlayedAt > COOLDOWN_MINUTES * 60 * 1000)
+            // .filter(song => !song.lastPlayedAt || new Date() - song.lastPlayedAt > COOLDOWN_MINUTES * 60 * 1000)
             .sort((a, b) => b.voteCount - a.voteCount || (a.lastPlayedAt || 0) - (b.lastPlayedAt || 0));
 
         const nextSong = sortedSongs[0];
@@ -124,26 +136,27 @@ const playNext = async (io, { venueName }) => {
             return;
         }
 
-        playlist.currentlyPlaying = nextSong.videoId;
+        // playlist.currentlyPlaying = nextSong.videoId;
         nextSong.voteCount = 0;
-        nextSong.lastPlayedAt = new Date();
+        // nextSong.lastPlayedAt = new Date();
 
         await playlist.save();
 
         broadcastPlaylist(io, venueName);
+        console.log("currentlyPlaying emmited");
         io.to(venueName).emit('currentlyPlaying', nextSong);
     } catch (error) {
         io.to(venueName).emit("error", "Failed to play next song");
     }
 };
 
-const handleSongEnd = async (io, socket) => {
-    verifyToken(socket)
-        .then(() => {
-            const venueName = socket.handshake.query.venueName;
-            playNext(io, { venueName });
-        })
-        .catch(() => socket.emit("error", "Unauthorized"));
+const handleSongEnd = async (io, socket,{venueName}) => {
+    // verifyToken(socket)
+        // .then(() => {
+            // const venueName = socket.handshake.query.venueName;
+            playNext(io,venueName);
+        // })
+        // .catch(() => socket.emit("error", "Unauthorized"));
 };
 
 export {

@@ -60,8 +60,8 @@ io.on('connection',(socket)=>{
         handleDownvote(io,socket,data)
     })
 
-    socket.on('songEnded',()=>{
-        handleSongEnd(io,socket);
+    socket.on('songEnded',(data)=>{
+        handleSongEnd(io,socket,data);
     })
 
     socket.on('disconnect', () => {
