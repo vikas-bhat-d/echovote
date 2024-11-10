@@ -17,15 +17,15 @@ const fetchPlaylist=asyncHandler(async (req,res,next)=>{
 })
 
 const addSong=asyncHandler(async (req,res,next) => {
-    const {videoId,title,thumbnailUrl}=req.body;
-    const ownerID=req.user._id
+    const {videoId,title,thumbnailUrl,venueName}=req.body;
+    // const ownerID=req.user._id
     
-    console.log(req.user._id,ownerID);
+    // console.log(req.user._id,ownerID);
 
     const newSong={videoId,title,thumbnailUrl};
 
     const addedSong=await Playlist.findOneAndUpdate(
-        {ownerID},
+        {venueName},
         {$push:{songList:newSong}},
         {new:true}
     )
@@ -44,9 +44,32 @@ const addSong=asyncHandler(async (req,res,next) => {
     // lastPlayedAt:Date
 })
 
+const removeSong=asyncHandler(async (req,res,next) => {
+    const {videoId,venueName}=req.body;
+    // const ownerID=req.user._id
+    
+    // console.log(req.user._id,ownerID);
+
+    // const newSong={videoId,title,thumbnailUrl};
+
+    const addedSong=await Playlist.findOneAndUpdate(
+        {venueName},
+        {$pull:{songList:{videoId}}},
+        {new:true}
+    )
+
+    if(addedSong)
+        res
+        .status(200)
+        .send(new apiResponse(200,addedSong,"Song added to the playlist"))
+    else
+        throw new apiError(400,"Song couldnot be added to the playlist")
+})
+
 
 
 export {
     fetchPlaylist,
-    addSong
+    addSong,
+    removeSong
 }
